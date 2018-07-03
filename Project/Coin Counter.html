@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title></title>
+		<style>
+			*
+				{
+					text-align: center;
+				}
+			body
+				{
+					background-color:#99ccff;
+				}
+			#nextButton
+				{
+					height: 4vh;
+				}
+			#startMenu
+				{
+					width: 50vw;
+					border: 1px solid black;
+					background-color: white;
+					margin: auto;
+				}
+			#result
+				{
+					height: 3vh;
+				}
+			#winImg
+				{
+					height: 50vh;
+				}
+			#win
+				{
+					font-size: 75px;
+				}
+			.column
+				{
+					display: inline-block;
+					width: 40vw;
+					vertical-align: top;
+					height: 90vh;
+				}
+			.coins
+				{
+					width: 75px;
+					display: block;
+				}
+			.choices
+				{
+					font-size: 75px;
+				}
+			#arrow1
+				{
+					height: 2vh;
+				}
+			#arrow2
+				{
+					height: 2vh;
+				}
+			.choices:hover
+				{
+					font-size: 80px;
+					color: blue;
+				}
+		</style>
+		<script src="getRandomInteger.js"></script>
+		<script>
+			function initialize()
+				{
+					document.getElementById("choice1").style.display="none";
+					document.getElementById("choice2").style.display="none";
+					document.getElementById("choice3").style.display="none";
+					rounds=0;
+					audioPlayed=0;
+					document.getElementById("game").style.display="none";
+					document.getElementById("startMenu").style.display="block";
+					document.getElementById("win").style.display="none";
+				}
+			function startRound()
+				{
+					if (audioPlayed==1)
+						{
+							audio.pause();
+						}
+					document.getElementById("game").style.display="block";
+					document.getElementById("startMenu").style.display="none";
+					if (rounds!=5)
+						{
+							rounds++;
+							document.getElementById("nextButton").disabled=true;
+							document.getElementById("arrow1").style.display="none";
+							document.getElementById("arrow2").style.display="none";
+							document.getElementById("choice1").style.display="inline";
+							document.getElementById("choice2").style.display="inline";
+							document.getElementById("choice3").style.display="inline";
+							document.getElementById("choice1").style.backgroundColor="white";
+							document.getElementById("choice2").style.backgroundColor="white";
+							document.getElementById("choice3").style.backgroundColor="white";
+							document.getElementById("choice1").disabled=false;
+							document.getElementById("choice2").disabled=false;
+							document.getElementById("choice3").disabled=false;
+							document.getElementById("coinDisplay").innerHTML="";
+							document.getElementById("result").innerHTML="";
+							generatedCoins=getRandomInteger(1,9);
+							for (i=0; i<generatedCoins; i++)
+								{
+									node=document.createElement("Img");
+									node.src="Images/Coin.png";
+									node.className="coins";
+									document.getElementById("coinDisplay").appendChild(node);
+								}
+							oneChoice=getRandomInteger(1,9);
+							twoChoice=getRandomInteger(1,9);
+							correctChoice=generatedCoins;
+							arrayOfChoices=[oneChoice, twoChoice, correctChoice];
+							checkForDuplicates();
+							arrayOfChoices.sort(function(a, b){return a-b});
+							document.getElementById("choice1").innerHTML=arrayOfChoices[0];
+							document.getElementById("choice2").innerHTML=arrayOfChoices[1];
+							document.getElementById("choice3").innerHTML=arrayOfChoices[2];
+						}
+					else
+						{
+							win();
+						}
+				}
+			function checkForDuplicates()
+				{
+					errorDetected=0;
+					if (arrayOfChoices[0]==arrayOfChoices[1])
+						{
+							arrayOfChoices[0]=arrayOfChoices[0]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[0]==arrayOfChoices[2])
+						{
+							arrayOfChoices[0]=arrayOfChoices[0]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[1]==arrayOfChoices[2])
+						{
+							arrayOfChoices[1]=arrayOfChoices[1]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[0]>9)
+						{
+							arrayOfChoices[0]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[1]>9)
+						{
+							arrayOfChoices[1]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[2]>9)
+						{
+							arrayOfChoices[2]=1;
+							errorDetected=1;
+						}
+					if (errorDetected==1)
+						checkForDuplicates();
+				}
+			function checkChoice(selected)
+				{
+					if (audioPlayed==1)
+						{
+							audio.pause();
+						}
+					if (selected.innerHTML==generatedCoins)
+						{
+							audio = new Audio("Audio/NiceJob.wav");
+							audio.play();
+							audioPlayed=1;
+							document.getElementById("result").innerHTML="Nice job! You've got the hang of this!";
+							selected.style.backgroundColor="green";
+							document.getElementById("choice1").disabled=true;
+							document.getElementById("choice2").disabled=true;
+							document.getElementById("choice3").disabled=true;
+							document.getElementById("nextButton").disabled=false;
+							document.getElementById("arrow1").style.display="inline";
+							document.getElementById("arrow2").style.display="inline";
+						}
+					else
+						{
+							audio = new Audio("Audio/TryAgain.wav");
+							audio.play();
+							audioPlayed=1;
+							document.getElementById("result").innerHTML="Not quite, try again!";
+							selected.style.backgroundColor="red";
+							selected.disabled="true";
+						}
+				}
+			function win()
+				{
+					audio = new Audio("Audio/ExcellentWork.wav");
+					audio.play();
+					audioPlayed=1;
+					document.getElementById("nextButton").style.display="none";
+					document.getElementById("game").style.display="none";
+					document.getElementById("arrow1").style.display="none";
+					document.getElementById("arrow2").style.display="none";
+					document.getElementById("win").style.display="block";
+				}
+		</script>
+	</head>
+	<body onload="initialize();">
+		<img id="arrow1" src="Images/ArrowLeft.png"/><button id="nextButton" onclick="startRound()">Next</button><img id="arrow2" src="Images/ArrowRight.png"/>
+		<div id="startMenu">
+			<h1>Coin Counter</h1>
+			<div>This is Coin Counter, a game which helps teach basic math concepts. There are going to be some coins on the left side of the screen. You must select the correct number of coins from the right. Once you select the correct choice, click the button at the top of the screen. Make it through 5 rounds, and you win!</div></br></br></br>
+			<div>Click the button at the top of the screen to begin. Good Luck! Have Fun!</div>
+		</div>
+
+		<div id="game">
+			<div id="coinDisplay" class="column"></div>
+
+			<div id="choiceDisplay" class="column">
+				<button onclick="checkChoice(this)" id="choice1" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice2" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice3" class="choices"></button>
+			</div>
+
+			<div id="result"></div>
+		</div>
+
+		<div id="win">
+		<span>YOU</span><img id="winImg" src="Images/Win.png"/><span>WIN!</span></div>
+	</body>
+</html>
