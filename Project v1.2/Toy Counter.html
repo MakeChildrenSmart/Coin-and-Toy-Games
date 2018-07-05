@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title></title>
+		<style>
+			*
+				{
+					text-align: center;
+				}
+			body
+				{
+					background-color:#99ccff;
+				}
+			#nextButton
+				{
+					font-size: 60px;
+				}
+			#startMenu
+				{
+					width: 50vw;
+					border: 1px solid black;
+					background-color: white;
+					margin: auto;
+					margin-top: 15vh;
+				}
+			#arrow1
+				{	
+					height: 10vh;
+				}
+			#arrow2
+				{
+					height: 10vh;
+				}
+			#winImg
+				{
+					height: 50vh;
+					margin-top: 5vh;
+				}
+			#win
+				{
+					color: white;
+					font-size: 75px;
+				}
+			.column
+				{
+					display: inline-block;
+					width: 40vw;
+					vertical-align: top;
+					height: 85vh;
+				}
+			.columnSec
+				{
+					display: inline-block;
+					width: 10vw;
+					vertical-align: top;
+					height: 85vh;
+				}
+			.toys
+				{
+					width: 65px;
+					display: inline;
+					margin: 2vh;
+				}
+			.choices
+				{
+					font-size: 85px;
+					margin-top: 5vh;
+				}
+			.choices:hover
+				{
+					font-size: 90px;
+					color: blue;
+				}
+			#toy1
+				{
+					position: fixed;
+					top: 10vh;
+					left: 5vw;
+					width: 15vw;
+				}
+			#toy2
+				{
+					position: fixed;
+					top: 70vh;
+					left: 10vw;
+					width: 10vw;
+				}
+			#toy3
+				{
+					position: fixed;
+					top: 45vh;
+					left: 75vw;
+					width: 20vw;
+				}
+		</style>
+		<script src="getRandomInteger.js"></script>
+		<script>
+			function initialize()
+				{
+					numbers=["Audio/1.wav","Audio/2.wav","Audio/3.wav","Audio/4.wav","Audio/5.wav","Audio/6.wav","Audio/7.wav","Audio/8.wav","Audio/9.wav","Audio/10.wav","Audio/11.wav","Audio/12.wav","Audio/13.wav","Audio/14.wav","Audio/15.wav","Audio/16.wav","Audio/17.wav","Audio/18.wav","Audio/19.wav","Audio/20.wav"];
+					success=["Audio/NiceJob.wav","Audio/HangOfThis.wav"];
+					failure=["Audio/TryAgain.wav","Audio/TryAgain2.wav"];
+					document.getElementById("choice1").style.display="none";
+					document.getElementById("choice2").style.display="none";
+					document.getElementById("choice3").style.display="none";
+					document.getElementById("choice4").style.display="none";
+					toyImages=["Images/Slinky.png","Images/Truck.png","Images/Bear.png"]
+					rounds=0;
+					audioPlayed=0;
+					document.getElementById("game").style.display="none";
+					document.getElementById("startMenu").style.display="block";
+					document.getElementById("win").style.display="none";
+				}
+			function startRound()
+				{
+					incorrectTries=0;
+					document.getElementById("win").style.display="none";
+					document.getElementById("nextButton").style.display="none";
+					document.getElementById("game").style.display="block";
+					document.getElementById("startMenu").style.display="none";
+					document.getElementById("arrow1").style.display="none";
+					document.getElementById("arrow2").style.display="none";
+					if (rounds!=5)
+						{
+							rounds++;
+							document.getElementById("round").innerHTML=rounds;
+							document.getElementById("choice1").style.display="inline";
+							document.getElementById("choice2").style.display="inline";
+							document.getElementById("choice3").style.display="inline";
+							document.getElementById("choice4").style.display="inline";
+							document.getElementById("choice1").style.backgroundColor="white";
+							document.getElementById("choice2").style.backgroundColor="white";
+							document.getElementById("choice3").style.backgroundColor="white";
+							document.getElementById("choice4").style.backgroundColor="white";
+							document.getElementById("choice1").disabled=false;
+							document.getElementById("choice2").disabled=false;
+							document.getElementById("choice3").disabled=false;
+							document.getElementById("choice4").disabled=false;
+							document.getElementById("toysDisplay").innerHTML="";
+							generatedToys=getRandomInteger(1,20);
+							chosenToy=toyImages[getRandomInteger(0,2)];
+							threeRows=0;
+							for (i=0; i<generatedToys; i++)
+								{
+									threeRows++;
+									node=document.createElement("Img");
+									node.src=chosenToy;
+									node.className="toys";
+									document.getElementById("toysDisplay").appendChild(node);
+									if (threeRows==3)
+										{
+											node=document.createElement("BR");
+											document.getElementById("toysDisplay").appendChild(node);
+											threeRows=0;
+										}
+								}
+							oneChoice=getRandomInteger(2,20);
+							twoChoice=getRandomInteger(2,20);
+							threeChoice=getRandomInteger(2,20);
+							arrayOfChoices=[oneChoice, twoChoice, threeChoice, generatedToys];
+							checkForDuplicates();
+							arrayOfChoices.sort(function(a, b){return a-b});
+							document.getElementById("choice1").innerHTML=arrayOfChoices[0];
+							document.getElementById("choice2").innerHTML=arrayOfChoices[1];
+							document.getElementById("choice3").innerHTML=arrayOfChoices[2];
+							document.getElementById("choice4").innerHTML=arrayOfChoices[3];
+						}
+					else
+						{
+							if (audioPlayed==1)
+								{
+									audio.pause();
+								}
+							win();
+						}
+				}
+			function checkForDuplicates()
+				{
+					errorDetected=0;
+					if (arrayOfChoices[0]==arrayOfChoices[1])
+						{
+							arrayOfChoices[0]=arrayOfChoices[0]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[0]==arrayOfChoices[2])
+						{
+							arrayOfChoices[0]=arrayOfChoices[0]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[1]==arrayOfChoices[2])
+						{
+							arrayOfChoices[1]=arrayOfChoices[1]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]==arrayOfChoices[0])
+						{
+							arrayOfChoices[3]=arrayOfChoices[3]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]==arrayOfChoices[1])
+						{
+							arrayOfChoices[3]=arrayOfChoices[3]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]==arrayOfChoices[2])
+						{
+							arrayOfChoices[3]=arrayOfChoices[3]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[0]>20)
+						{
+							arrayOfChoices[0]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[1]>20)
+						{
+							arrayOfChoices[1]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[2]>20)
+						{
+							arrayOfChoices[2]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]>20)
+						{
+							arrayOfChoices[3]=1;
+							errorDetected=1;
+						}
+					if (errorDetected==1)
+						checkForDuplicates();
+				}
+			function checkChoice(selected)
+				{
+					if (audioPlayed==1)
+						{
+							audio.pause();
+						}
+					if (selected.innerHTML==generatedToys)
+						{
+							audio = new Audio(success[getRandomInteger(0,1)]);
+							audio.play();
+							audioPlayed=1;
+							selected.style.backgroundColor="green";
+							document.getElementById("choice1").disabled=true;
+							document.getElementById("choice2").disabled=true;
+							document.getElementById("choice3").disabled=true;
+							document.getElementById("choice4").disabled=true;
+							startRound();
+						}
+					else
+						{
+							incorrectTries++;
+							audio = new Audio(failure[getRandomInteger(0,1)]);
+							audio.play();
+							audioPlayed=1;
+							selected.style.backgroundColor="red";
+							selected.disabled="true";
+						}
+					if (incorrectTries==2)
+						{
+							showAnswer();
+						}
+				}
+			function showAnswer()
+				{
+					if (audioPlayed==1)
+						{
+							audio.pause();
+						}
+					toyClass=document.getElementsByClassName("toys");
+					i=0;
+					intervalClearer=setInterval(function(){ next() }, 1000)
+				}
+			function next()
+				{
+					if (i<toyClass.length)
+						{
+							audio = new Audio(numbers[i]);
+							audio.play();
+							toyClass[i].style.backgroundColor="green";
+							i++;
+						}
+					else
+						{
+							clearInterval(intervalClearer);
+							audio.pause();
+						}
+				}
+			function win()
+				{
+					audio = new Audio("Audio/ExcellentWork.wav");
+					audio.play();
+					audioPlayed=1;
+					document.getElementById("nextButton").style.display="inline";
+					document.getElementById("arrow1").style.display="inline";
+					document.getElementById("arrow2").style.display="inline";
+					document.getElementById("nextButton").innerHTML="Play Again";
+					rounds=0;
+					document.getElementById("game").style.display="none";
+					document.getElementById("win").style.display="block";
+				}
+		</script>
+	</head>
+	<body onload="initialize();">
+		<img id="arrow1" src="Images/ArrowLeft.png"/><button id="nextButton" onclick="startRound()">Start Game</button><img id="arrow2" src="Images/ArrowRight.png"/>
+		<div id="startMenu">
+			<img id="toy1" src="Images/Bear.png"/>
+			<img id="toy2" src="Images/Slinky.png"/>
+			<img id="toy3" src="Images/Truck.png"/>
+
+
+
+			<h1>Toy Counter</h1>
+			<div>There will be some toys on the left side of the screen. Select the correct number of toys from the right.</div></br>
+			<div>Make it through 5 rounds, and you win!</div>
+			</br></br></br>
+			<div>Click the button at the top of the screen to begin. Good Luck! Have Fun!</div></br>
+		</div>
+
+		<div id="game">
+			<div>Round: <span id="round"></span></div>
+
+			<div id="toysDisplay" class="column"></div>
+
+			<div id="choiceDisplay" class="column">
+				<button onclick="checkChoice(this)" id="choice1" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice2" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice3" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice4" class="choices"></button>
+			</div>
+		</div>
+
+		<div id="win">
+		<span>YOU</span><img id="winImg" src="Images/Win.png"/><span>WIN!</span></div>
+	</body>
+</html>
