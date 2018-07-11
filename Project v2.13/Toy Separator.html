@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title></title>
+		<style>
+			*
+				{
+					text-align: center;
+				}
+			body
+				{
+					background-color: #99ccff;
+				}
+			form
+				{
+					font-size: 50px;
+					width: 40vw;
+				}
+			input
+				{
+					font-size: 50px;
+					width: 5vw;
+				}
+			#startMenu
+				{
+					width: 50vw;
+					border: 1px solid black;
+					background-color: white;
+					margin: auto;
+					margin-top: 15vh;
+				}
+			#toy1
+				{
+					position: fixed;
+					top: 10vh;
+					left: 5vw;
+					width: 15vw;
+				}
+			#toy2
+				{
+					position: fixed;
+					top: 70vh;
+					left: 10vw;
+					width: 10vw;
+				}
+			#toy3
+				{
+					position: fixed;
+					top: 45vh;
+					left: 75vw;
+					width: 20vw;
+				}
+			#helpButton
+				{
+					position: fixed;
+					top:0px;
+					left:0px;
+					font-size: 50px;
+				}
+			#nextButton
+				{
+					font-size: 50px;
+					display: none;
+				}
+			#winImg
+				{
+					height: 50vh;
+					margin-top: 5vh;
+				}
+			#win
+				{
+					color: white;
+					font-size: 75px;
+				}
+			#whichToyText
+				{
+					font-size: 40px;
+				}
+			.ranges
+				{
+					font-size: 50px;
+					margin: 2vw;
+				}
+			.column
+				{
+					display: inline-block;
+					width: 40vw;
+					vertical-align: top;
+					height: 85vh;
+				}
+			.columnSec
+				{
+					display: inline-block;
+					width: 10vw;
+					vertical-align: top;
+					height: 85vh;
+				}
+			.slinkies
+				{
+					width: 85px;
+					display: inline;
+					margin: 2vh;
+				}
+			.trucks
+				{
+					width: 85px;
+					display: inline;
+					margin: 2vh;
+				}
+			.bears
+				{
+					width: 85px;
+					display: inline;
+					margin: 2vh;
+				}
+			.slinkies:hover
+				{
+					width: 90px;
+					background-color: blue;
+				}
+			.trucks:hover
+				{
+					width: 90px;
+					background-color: blue;
+				}
+			.bears:hover
+				{
+					width: 90px;
+					background-color: blue;
+				}
+			.choices
+				{
+					font-size: 80px;
+					margin-top: 3vh;
+				}
+			.choices:hover
+				{
+					font-size: 90px;
+					color: blue;
+				}
+		</style>
+		<script src="getRandomInteger.js"></script>
+		<script>
+			function initialize()
+				{
+					numbers=["Audio/1.wav","Audio/2.wav","Audio/3.wav","Audio/4.wav","Audio/5.wav","Audio/6.wav","Audio/7.wav","Audio/8.wav","Audio/9.wav","Audio/10.wav","Audio/11.wav","Audio/12.wav","Audio/13.wav","Audio/14.wav","Audio/15.wav","Audio/16.wav","Audio/17.wav","Audio/18.wav","Audio/19.wav","Audio/20.wav"];
+					success=["Audio/NiceJob.wav","Audio/ta-da.mp3","Audio/goodjob.mp3","Audio/yay.mp3"];
+					failure=["Audio/TryAgain.wav","Audio/TryAgain2.wav"];
+					toyImages=["Images/Slinky.png","Images/Truck.png","Images/Bear.png"]
+					rounds=0;
+					audioPlayed=0;
+					oneTime=0;
+					document.getElementById("game").style.display="none";
+					document.getElementById("startMenu").style.display="block";
+					document.getElementById("win").style.display="none";
+				}
+			function selectRange(range)
+				{
+					document.getElementById("rangeContainer").style.display="none";
+					selectedRange=range;
+					startRound();
+				}
+			function startRound()
+				{
+					bearClass=document.getElementsByClassName("bears");
+					for (z=0; z<bearClass.length; z++)
+						{
+							bearClass[z].style.backgroundColor="#99ccff";
+						}
+					document.getElementById("whichToy").innerHTML="SLINKIES"
+					slinkyNum=0;
+					truckNum=0;
+					bearNum=0;
+					requestedToy=0;
+					incorrectTries=0;
+					document.getElementById("win").style.display="none";
+					document.getElementById("nextButton").style.display="none";
+					document.getElementById("game").style.display="block";
+					document.getElementById("startMenu").style.display="none";
+					if (rounds>2 && oneTime==0)
+						{
+							success.push("Audio/HangOfThis.wav");
+							oneTime=1;
+						}
+					if (rounds!=5)
+						{
+							rounds++;
+							document.getElementById("round").innerHTML=rounds;
+							document.getElementById("helpButton").disabled=false;
+							document.getElementById("choice1").style.display="inline";
+							document.getElementById("choice2").style.display="inline";
+							document.getElementById("choice3").style.display="inline";
+							document.getElementById("choice4").style.display="inline";
+							document.getElementById("choice1").style.backgroundColor="white";
+							document.getElementById("choice2").style.backgroundColor="white";
+							document.getElementById("choice3").style.backgroundColor="white";
+							document.getElementById("choice4").style.backgroundColor="white";
+							document.getElementById("toysDisplay").innerHTML="";
+							rows=0;
+							slinkyNum=getRandomInteger(0, (selectedRange-2));
+							truckNum=getRandomInteger(0, (selectedRange-(slinkyNum+1)));
+							bearNum=selectedRange-(slinkyNum+truckNum);
+							if (selectedRange==5)
+								{
+									rowLimit=2;
+								}
+							if (selectedRange==10)
+								{
+									rowLimit=3;
+								}
+							if (selectedRange==20)
+								{
+									rowLimit=4;
+								}
+							for (i=0; i<slinkyNum; i++)
+								{
+									rows++;
+									node=document.createElement("Img");
+									node.src="Images/Slinky.png";
+									node.className="slinkies";
+									document.getElementById("toysDisplay").appendChild(node);
+									if (rows==rowLimit)
+										{
+											node=document.createElement("BR");
+											document.getElementById("toysDisplay").appendChild(node);
+											rows=0;
+										}
+								}
+							for (i=0; i<truckNum; i++)
+								{
+									rows++;
+									node=document.createElement("Img");
+									node.src="Images/Truck.png";
+									node.className="trucks";
+									document.getElementById("toysDisplay").appendChild(node);
+									if (rows==rowLimit)
+										{
+											node=document.createElement("BR");
+											document.getElementById("toysDisplay").appendChild(node);
+											rows=0;
+										}
+								}
+							for (i=0; i<bearNum; i++)
+								{
+									rows++;
+									node=document.createElement("Img");
+									node.src="Images/Bear.png";
+									node.className="bears";
+									document.getElementById("toysDisplay").appendChild(node);
+									if (rows==rowLimit)
+										{
+											node=document.createElement("BR");
+											document.getElementById("toysDisplay").appendChild(node);
+											rows=0;
+										}
+								}
+							oneChoice=slinkyNum;
+							twoChoice=truckNum;
+							threeChoice=bearNum;
+							fourChoice=getRandomInteger(1, selectedRange);
+							arrayOfChoices=[oneChoice, twoChoice, threeChoice, fourChoice];
+							checkForDuplicates();
+							arrayOfChoices.sort(function(a, b){return a-b});
+							document.getElementById("choice1").innerHTML=arrayOfChoices[0];
+							document.getElementById("choice2").innerHTML=arrayOfChoices[1];
+							document.getElementById("choice3").innerHTML=arrayOfChoices[2];
+							document.getElementById("choice4").innerHTML=arrayOfChoices[3];
+						}
+					else
+						{
+							if (audioPlayed==1)
+								{
+									audio.pause();
+								}
+							win();
+						}
+					clearTimeout(timeoutClearer);
+				}
+			function checkForDuplicates()
+				{
+					errorDetected=0;
+					if (arrayOfChoices[0]==arrayOfChoices[1])
+						{
+							arrayOfChoices[0]=arrayOfChoices[0]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[0]==arrayOfChoices[2])
+						{
+							arrayOfChoices[0]=arrayOfChoices[0]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[1]==arrayOfChoices[2])
+						{
+							arrayOfChoices[1]=arrayOfChoices[1]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]==arrayOfChoices[0])
+						{
+							arrayOfChoices[3]=arrayOfChoices[3]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]==arrayOfChoices[1])
+						{
+							arrayOfChoices[3]=arrayOfChoices[3]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]==arrayOfChoices[2])
+						{
+							arrayOfChoices[3]=arrayOfChoices[3]+1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[0]>selectedRange)
+						{
+							arrayOfChoices[0]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[1]>selectedRange)
+						{
+							arrayOfChoices[1]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[2]>selectedRange)
+						{
+							arrayOfChoices[2]=1;
+							errorDetected=1;
+						}
+					if (arrayOfChoices[3]>selectedRange)
+						{
+							arrayOfChoices[3]=1;
+							errorDetected=1;
+						}
+					if (errorDetected==1)
+						checkForDuplicates();
+				}
+			function checkChoice(selected)
+				{
+					found=0;
+					requestedToy++;
+					if (audioPlayed==1)
+						{
+							audio.pause();
+						}
+					if (selected.innerHTML==slinkyNum && requestedToy==1)
+						{
+							selected.style.backgroundColor="green";
+							audio = new Audio(success[getRandomInteger(0,success.length-1)]);
+							audio.play();
+							audioPlayed=1;
+							timeoutClearer=setTimeout(function(){
+							document.getElementById("whichToy").innerHTML="TRUCKS";
+							document.getElementById("choice1").style.backgroundColor="white";
+							document.getElementById("choice2").style.backgroundColor="white";
+							document.getElementById("choice3").style.backgroundColor="white";
+							document.getElementById("choice4").style.backgroundColor="white";
+							}, 1500);
+							found=1;
+							document.getElementById("helpButton").disabled=false;
+						}
+					if (selected.innerHTML==truckNum && requestedToy==2)
+						{
+							selected.style.backgroundColor="green";
+							audio = new Audio(success[getRandomInteger(0,success.length-1)]);
+							audio.play();
+							audioPlayed=1;
+							timeoutClearer=setTimeout(function(){
+							document.getElementById("whichToy").innerHTML="BEARS";
+							document.getElementById("choice1").style.backgroundColor="white";
+							document.getElementById("choice2").style.backgroundColor="white";
+							document.getElementById("choice3").style.backgroundColor="white";
+							document.getElementById("choice4").style.backgroundColor="white";
+							}, 1500);
+							found=1;
+							document.getElementById("helpButton").disabled=false;
+						}
+					if (selected.innerHTML==bearNum && requestedToy==3)
+						{
+							selected.style.backgroundColor="green";
+							audio = new Audio(success[getRandomInteger(0,success.length-1)]);
+							audio.play();
+							audioPlayed=1;
+							timeoutClearer=setTimeout(function(){ startRound() }, 1500);
+							found=1;
+							document.getElementById("helpButton").disabled=false;
+						}
+					if (found==0)
+						{
+							selected.style.backgroundColor="red";
+							incorrectTries++;
+							requestedToy=requestedToy-1;
+							audio = new Audio(failure[getRandomInteger(0,1)]);
+							audio.play();
+							audioPlayed=1;
+						}
+					if (incorrectTries==2)
+						{
+							showAnswer();
+							incorrectTries=0;
+						}
+				}
+			function showAnswer()
+				{
+					if (audioPlayed==1)
+						{
+							audio.pause();
+						}
+					slinkyClass=document.getElementsByClassName("slinkies");
+					truckClass=document.getElementsByClassName("trucks");
+					bearClass=document.getElementsByClassName("bears");
+					i=0;
+					highlighted=0;
+					alreadyHighlighted=0;
+					intervalClearer=setInterval(function(){ next() }, 1000)
+				}
+			function next()
+				{
+					if (requestedToy==0)
+						{
+							if (i<slinkyClass.length)
+								{
+									audio = new Audio(numbers[i]);
+									audio.play();
+									slinkyClass[i].style.backgroundColor="green";
+									i++;
+								}
+							else
+								{
+									choicesClass=document.getElementsByClassName("choices")
+									for (x=0; x<choicesClass.length; x++)
+										{
+											if (choicesClass[x].innerHTML==slinkyNum && alreadyHighlighted==0)
+												{
+													choicesClass[x].style.backgroundColor="green";
+													highlighted=1;
+												}
+											if (highlighted==1)
+												{
+													alreadyHighlighted=1;
+												}
+										}
+									clearInterval(intervalClearer);
+									timeoutClearer=setTimeout(function(){
+									document.getElementById("whichToy").innerHTML="TRUCKS";
+									requestedToy++;
+									document.getElementById("choice1").style.backgroundColor="white";
+									document.getElementById("choice2").style.backgroundColor="white";
+									document.getElementById("choice3").style.backgroundColor="white";
+									document.getElementById("choice4").style.backgroundColor="white";
+									slinkyClass=document.getElementsByClassName("slinkies");
+									for (z=0; z<slinkyClass.length; z++)
+										{
+											slinkyClass[z].style.backgroundColor="#99ccff";
+										}
+									}, 1500);
+									audio.pause();
+								}
+						}
+					if (requestedToy==1)
+						{
+							if (i<truckClass.length)
+								{
+									audio = new Audio(numbers[i]);
+									audio.play();
+									truckClass[i].style.backgroundColor="green";
+									i++;
+								}
+							else
+								{
+									choicesClass=document.getElementsByClassName("choices")
+									for (x=0; x<choicesClass.length; x++)
+										{
+											if (choicesClass[x].innerHTML==truckNum && alreadyHighlighted==0)
+												{
+													choicesClass[x].style.backgroundColor="green";
+													highlighted=1;
+												}
+											if (highlighted==1)
+												{
+													alreadyHighlighted=1;
+												}
+										}
+									clearInterval(intervalClearer);
+									timeoutClearer=setTimeout(function(){
+									document.getElementById("whichToy").innerHTML="BEARS";
+									requestedToy++;
+									document.getElementById("choice1").style.backgroundColor="white";
+									document.getElementById("choice2").style.backgroundColor="white";
+									document.getElementById("choice3").style.backgroundColor="white";
+									document.getElementById("choice4").style.backgroundColor="white";
+									truckClass=document.getElementsByClassName("trucks");
+									for (z=0; z<truckClass.length; z++)
+										{
+											truckClass[z].style.backgroundColor="#99ccff";
+										}
+									}, 1500);
+									audio.pause();
+								}
+						}
+					if (requestedToy==2)
+						{
+							if (i<bearClass.length)
+								{
+									audio = new Audio(numbers[i]);
+									audio.play();
+									bearClass[i].style.backgroundColor="green";
+									i++;
+								}
+							else
+								{
+									choicesClass=document.getElementsByClassName("choices")
+									for (x=0; x<choicesClass.length; x++)
+										{
+											if (choicesClass[x].innerHTML==bearNum && alreadyHighlighted==0)
+												{
+													choicesClass[x].style.backgroundColor="green";
+													highlighted=1;
+												}
+											if (highlighted==1)
+												{
+													alreadyHighlighted=1;
+												}
+										}
+									clearInterval(intervalClearer);
+									timeoutClearer=setTimeout(function(){ startRound() }, 1500);
+									audio.pause();
+								}
+						}
+				}
+			function help()
+				{
+					document.getElementById("helpButton").disabled=true;
+					slinkyClass=document.getElementsByClassName("slinkies");
+					truckClass=document.getElementsByClassName("trucks");
+					bearClass=document.getElementsByClassName("bears");
+					i=0;
+					intervalClearer2=setInterval(function(){ helpCount() }, 1000)
+				}
+			function helpCount()
+				{
+					if (requestedToy==0)
+						{
+							if (i<slinkyClass.length-1)
+								{
+									audio = new Audio(numbers[i]);
+									audio.play();
+									slinkyClass[i].style.backgroundColor="green";
+									i++;
+								}
+							else
+								{
+									audio = new Audio("Audio/andonemoremakes.mp3");
+									audio.play();
+									clearInterval(intervalClearer2);
+								}
+						}
+					if (requestedToy==1)
+						{
+							if (i<truckClass.length-1)
+								{
+									audio = new Audio(numbers[i]);
+									audio.play();
+									truckClass[i].style.backgroundColor="green";
+									i++;
+								}
+							else
+								{
+									audio = new Audio("Audio/andonemoremakes.mp3");
+									audio.play();
+									clearInterval(intervalClearer2);
+								}
+						}
+					if (requestedToy==2)
+						{
+							if (i<bearClass.length-1)
+								{
+									audio = new Audio(numbers[i]);
+									audio.play();
+									bearClass[i].style.backgroundColor="green";
+									i++;
+								}
+							else
+								{
+									audio = new Audio("Audio/andonemoremakes.mp3");
+									audio.play();
+									clearInterval(intervalClearer2);
+								}
+						}
+				}
+			function win()
+				{
+					audio = new Audio("Audio/ExcellentWork.wav");
+					audio.play();
+					audioPlayed=1;
+					document.getElementById("nextButton").style.display="inline";
+					rounds=0;
+					document.getElementById("game").style.display="none";
+					document.getElementById("win").style.display="block";
+				}
+		</script>
+	</head>
+	<body onload="initialize();">
+		<button id="nextButton" onclick="startRound()">Play Again</button>
+		<div id="startMenu">
+			<img id="toy1" src="Images/Bear.png"/>
+			<img id="toy2" src="Images/Slinky.png"/>
+			<img id="toy3" src="Images/Truck.png"/>
+
+
+
+			<h1>Toy Separator</h1>
+			<div>Choose the correct number of each toy.</div></br>
+			<div>Make it through 5 rounds, and you win!</div>
+			</br></br></br>
+			<div>Click the button at the top of the screen to begin. Good Luck! Have Fun!</div></br>
+		</div>
+		<div id="rangeContainer">
+			<button class="ranges" onclick="selectRange(5)">0-5</button>
+			<button class="ranges" onclick="selectRange(10)">0-10</button>
+			<button class="ranges" onclick="selectRange(20)">0-20</button>
+		</div>
+
+		<div id="game">
+			<button id="helpButton" onclick="help()">Help</button>
+			<div>Round: <span id="round"></span></div>
+
+			<div id="toysDisplay" class="column"></div>
+
+			<div id="choiceDisplay" class="column">
+				<div id="whichToyText">How many <b><span id="whichToy"></span></b> are there?</div>
+				<button onclick="checkChoice(this)" id="choice1" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice2" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice3" class="choices"></button></br></br></br>
+				<button onclick="checkChoice(this)" id="choice4" class="choices"></button>
+			</div>
+		</div>
+
+		<div id="win"><span>YOU</span><img id="winImg" src="Images/Win.png"/><span>WIN!</span></div>
+	</body>
+</html>
