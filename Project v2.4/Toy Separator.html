@@ -330,6 +330,21 @@
 						{
 							audio.pause();
 						}
+					slinkyClass=document.getElementsByClassName("slinkies");
+					truckClass=document.getElementsByClassName("trucks");
+					bearClass=document.getElementsByClassName("bears");
+					for (i=0; i<slinkyClass.length; i++)
+						{
+							slinkyClass[i].style.backgroundColor="#99ccff";
+						}
+					for (i=0; i<truckClass.length; i++)
+						{
+							truckClass[i].style.backgroundColor="#99ccff";
+						}
+					for (i=0; i<bearClass.length; i++)
+						{
+							bearClass[i].style.backgroundColor="#99ccff";
+						}
 					if (selected.innerHTML==slinkyNum && requestedToy==1)
 						{
 							selected.style.backgroundColor="green";
